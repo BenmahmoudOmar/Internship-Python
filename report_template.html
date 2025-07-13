@@ -20,61 +20,43 @@
     <h3>🟢 Added Nodes</h3>
     <table>
         <tr><th>State</th><th>Attributes</th></tr>
-        
+        {% for name, attrs in added_nodes %}
         <tr class="added">
-            <td><b>param 1 = 100</b></td>
-            <td><pre></pre></td>
+            <td><b>{{ name }}</b></td>
+            <td><pre>{{ attrs }}</pre></td>
         </tr>
-        
-        <tr class="added">
-            <td><b>param 1 = 1000</b></td>
-            <td><pre>param 2 = 2000
-param 3=500</pre></td>
-        </tr>
-        
-        <tr class="added">
-            <td><b>param 1 = 1500</b></td>
-            <td><pre></pre></td>
-        </tr>
-        
-        <tr class="added">
-            <td><b>param 1 = 200</b></td>
-            <td><pre></pre></td>
-        </tr>
-        
+        {% endfor %}
     </table>
 
     <h3>🔴 Deleted Nodes</h3>
     <table>
         <tr><th>State</th><th>Attributes</th></tr>
-        
+        {% for name, attrs in deleted_nodes %}
         <tr class="deleted">
-            <td><b>(no label)</b></td>
-            <td><pre></pre></td>
+            <td><b>{{ name }}</b></td>
+            <td><pre>{{ attrs }}</pre></td>
         </tr>
-        
-        <tr class="deleted">
-            <td><b>param 1 = 1000</b></td>
-            <td><pre>param 2 = 2000</pre></td>
-        </tr>
-        
-        <tr class="deleted">
-            <td><b>param 1 = 300</b></td>
-            <td><pre></pre></td>
-        </tr>
-        
+        {% endfor %}
     </table>
 
     <h3>🟢 Added Edges</h3>
     <table>
         <tr><th>From</th><th>To</th><th>Label</th></tr>
-        
+        {% for from_node, to_node, label in added_edges %}
+        <tr class="added">
+            <td>{{ from_node }}</td><td>{{ to_node }}</td><td>{{ label }}</td>
+        </tr>
+        {% endfor %}
     </table>
 
     <h3>🔴 Deleted Edges</h3>
     <table>
         <tr><th>From</th><th>To</th><th>Label</th></tr>
-        
+        {% for from_node, to_node, label in deleted_edges %}
+        <tr class="deleted">
+            <td>{{ from_node }}</td><td>{{ to_node }}</td><td>{{ label }}</td>
+        </tr>
+        {% endfor %}
     </table>
 </body>
 </html>

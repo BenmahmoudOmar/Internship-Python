@@ -1,4 +1,6 @@
 from vsdx import VisioFile
+from jinja2 import Environment, FileSystemLoader
+import os
 
 def extract_diagram_info(vsdx_path):
     nodes = set()
@@ -35,7 +37,6 @@ def extract_diagram_info(vsdx_path):
                             to_text = to_shape.text.strip() if to_shape.text else "(no text)"
                             edges.add((from_text, to_text, text))
                 else:
-                    # Separate state name and parameters
                     lines = text.splitlines()
                     state_name = lines[0].strip() if lines else "(no label)"
                     attributes = "\n".join(line.strip() for line in lines[1:]) if len(lines) > 1 else ""
@@ -45,62 +46,33 @@ def extract_diagram_info(vsdx_path):
 
 
 def generate_html_report(added_nodes, deleted_nodes, added_edges, deleted_edges, output_file):
-    html_template = """
-    <html><head><style>
-    body {{ font-family: Arial; }}
-    h2 {{ color: #2F4F4F; }}
-    table {{ border-collapse: collapse; width: 80%; margin-bottom: 20px; }}
-    th, td {{ border: 1px solid #ccc; padding: 8px; vertical-align: top; }}
-    th {{ background-color: #f2f2f2; }}
-    .added {{ background-color: #d4fcdc; }}
-    .deleted {{ background-color: #fcdcdc; }}
-    pre {{ margin: 0; font-family: monospace; }}
-    </style></head><body>
-    <h2>Visio Diagram Comparison Report</h2>
+    env = Environment(loader=FileSystemLoader(searchpath=os.getcwd()))
+    template = env.get_template("report_template.html")
 
-    <h3>🟢 Added Nodes</h3>
-    <table><tr><th>State</th><th>Attributes</th></tr>{0}</table>
-
-    <h3>🔴 Deleted Nodes</h3>
-    <table><tr><th>State</th><th>Attributes</th></tr>{1}</table>
-
-    <h3>🟢 Added Edges</h3>
-    <table><tr><th>From</th><th>To</th><th>Label</th></tr>{2}</table>
-
-    <h3>🔴 Deleted Edges</h3>
-    <table><tr><th>From</th><th>To</th><th>Label</th></tr>{3}</table>
-
-    </body></html>
-    """
-
-    added_node_rows = ''.join(f'<tr class="added"><td><b>{name}</b></td><td><pre>{attrs}</pre></td></tr>' for name, attrs in added_nodes)
-    deleted_node_rows = ''.join(f'<tr class="deleted"><td><b>{name}</b></td><td><pre>{attrs}</pre></td></tr>' for name, attrs in deleted_nodes)
-    added_edge_rows = ''.join(f'<tr class="added"><td>{f}</td><td>{t}</td><td>{l}</td></tr>' for f, t, l in added_edges)
-    deleted_edge_rows = ''.join(f'<tr class="deleted"><td>{f}</td><td>{t}</td><td>{l}</td></tr>' for f, t, l in deleted_edges)
-
-    html = html_template.format(added_node_rows, deleted_node_rows, added_edge_rows, deleted_edge_rows)
+    rendered = template.render(
+        added_nodes=sorted(added_nodes),
+        deleted_nodes=sorted(deleted_nodes),
+        added_edges=sorted(added_edges),
+        deleted_edges=sorted(deleted_edges)
+    )
 
     with open(output_file, "w", encoding="utf-8") as f:
-        f.write(html)
+        f.write(rendered)
 
-    print(f"Report saved as: {output_file}")
+    print(f"✅ Jinja2 report saved to: {output_file}")
 
 
 if __name__ == "__main__":
-    # File paths
     initial_vsdx = r"C:\Users\benma\Downloads\diagram_act001.vsdx"
     updated_vsdx = r"C:\Users\benma\Downloads\diagram_act002.vsdx"
 
-    # Extract diagram info
     initial_nodes, initial_edges = extract_diagram_info(initial_vsdx)
     updated_nodes, updated_edges = extract_diagram_info(updated_vsdx)
 
-    # Compare nodes and edges
     added_nodes = updated_nodes - initial_nodes
     deleted_nodes = initial_nodes - updated_nodes
     added_edges = updated_edges - initial_edges
     deleted_edges = initial_edges - updated_edges
 
-    # Generate HTML report
     output_path = "diagram_comparison_report.html"
     generate_html_report(added_nodes, deleted_nodes, added_edges, deleted_edges, output_path)
