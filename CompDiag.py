@@ -35,8 +35,14 @@ def extract_diagram_info(vsdx_path):
                             to_text = to_shape.text.strip() if to_shape.text else "(no text)"
                             edges.add((from_text, to_text, text))
                 else:
-                    nodes.add(text)
+                    # Separate state name and parameters
+                    lines = text.splitlines()
+                    state_name = lines[0].strip() if lines else "(no label)"
+                    attributes = "\n".join(line.strip() for line in lines[1:]) if len(lines) > 1 else ""
+                    nodes.add((state_name, attributes))
+
     return nodes, edges
+
 
 def generate_html_report(added_nodes, deleted_nodes, added_edges, deleted_edges, output_file):
     html_template = """
@@ -44,18 +50,19 @@ def generate_html_report(added_nodes, deleted_nodes, added_edges, deleted_edges,
     body {{ font-family: Arial; }}
     h2 {{ color: #2F4F4F; }}
     table {{ border-collapse: collapse; width: 80%; margin-bottom: 20px; }}
-    th, td {{ border: 1px solid #ccc; padding: 8px; }}
+    th, td {{ border: 1px solid #ccc; padding: 8px; vertical-align: top; }}
     th {{ background-color: #f2f2f2; }}
     .added {{ background-color: #d4fcdc; }}
     .deleted {{ background-color: #fcdcdc; }}
+    pre {{ margin: 0; font-family: monospace; }}
     </style></head><body>
     <h2>Visio Diagram Comparison Report</h2>
 
     <h3>🟢 Added Nodes</h3>
-    <table><tr><th>Label</th></tr>{0}</table>
+    <table><tr><th>State</th><th>Attributes</th></tr>{0}</table>
 
     <h3>🔴 Deleted Nodes</h3>
-    <table><tr><th>Label</th></tr>{1}</table>
+    <table><tr><th>State</th><th>Attributes</th></tr>{1}</table>
 
     <h3>🟢 Added Edges</h3>
     <table><tr><th>From</th><th>To</th><th>Label</th></tr>{2}</table>
@@ -66,8 +73,8 @@ def generate_html_report(added_nodes, deleted_nodes, added_edges, deleted_edges,
     </body></html>
     """
 
-    added_node_rows = ''.join(f'<tr class="added"><td>{n}</td></tr>' for n in added_nodes)
-    deleted_node_rows = ''.join(f'<tr class="deleted"><td>{n}</td></tr>' for n in deleted_nodes)
+    added_node_rows = ''.join(f'<tr class="added"><td><b>{name}</b></td><td><pre>{attrs}</pre></td></tr>' for name, attrs in added_nodes)
+    deleted_node_rows = ''.join(f'<tr class="deleted"><td><b>{name}</b></td><td><pre>{attrs}</pre></td></tr>' for name, attrs in deleted_nodes)
     added_edge_rows = ''.join(f'<tr class="added"><td>{f}</td><td>{t}</td><td>{l}</td></tr>' for f, t, l in added_edges)
     deleted_edge_rows = ''.join(f'<tr class="deleted"><td>{f}</td><td>{t}</td><td>{l}</td></tr>' for f, t, l in deleted_edges)
 
@@ -78,21 +85,22 @@ def generate_html_report(added_nodes, deleted_nodes, added_edges, deleted_edges,
 
     print(f"Report saved as: {output_file}")
 
-if __name__ == "__main__":
-    # paths
-    initial_vsdx = r"C:\Users\benma\Downloads\diagram_act.vsdx"
-    updated_vsdx = r"C:\Users\benma\Downloads\diag_act2.vsdx"
 
-    # Extract
+if __name__ == "__main__":
+    # File paths
+    initial_vsdx = r"C:\Users\benma\Downloads\diagram_act001.vsdx"
+    updated_vsdx = r"C:\Users\benma\Downloads\diagram_act002.vsdx"
+
+    # Extract diagram info
     initial_nodes, initial_edges = extract_diagram_info(initial_vsdx)
     updated_nodes, updated_edges = extract_diagram_info(updated_vsdx)
 
-    # Compare
+    # Compare nodes and edges
     added_nodes = updated_nodes - initial_nodes
     deleted_nodes = initial_nodes - updated_nodes
     added_edges = updated_edges - initial_edges
     deleted_edges = initial_edges - updated_edges
 
-    # Generate HTML
+    # Generate HTML report
     output_path = "diagram_comparison_report.html"
     generate_html_report(added_nodes, deleted_nodes, added_edges, deleted_edges, output_path)
