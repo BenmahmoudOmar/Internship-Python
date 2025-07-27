@@ -1,0 +1,2 @@
+[console_scripts]
+visio-compare = visio_class_compare.compare:main

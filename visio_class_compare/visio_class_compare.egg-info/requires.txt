@@ -1,0 +1,5 @@
+vsdx>=0.0.7
+jinja2>=3.1
+
+[dev]
+pytest>=7.0

@@ -39,22 +39,34 @@
         {% endfor %}
     </table>
 
-    <h3>🟢 Added Edges</h3>
-    <table>
-        <tr><th>From</th><th>To</th><th>Label</th></tr>
-        {% for from_node, to_node, label in added_edges %}
-        <tr class="added">
-            <td>{{ from_node }}</td><td>{{ to_node }}</td><td>{{ label }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+   <h3>🟢 Added Edges</h3>
+<table>
+    <tr><th>From</th><th>To</th></tr>
+    {% for from_node, to_node in added_edges %}
+    <tr class="added">
+        <td>{{ from_node }}</td><td>{{ to_node }}</td>
+    </tr>
+    {% endfor %}
+</table>
 
-    <h3>🔴 Deleted Edges</h3>
+<h3>🔴 Deleted Edges</h3>
+<table>
+    <tr><th>From</th><th>To</th></tr>
+    {% for from_node, to_node in deleted_edges %}
+    <tr class="deleted">
+        <td>{{ from_node }}</td><td>{{ to_node }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+    <h3>🟡 Changed Nodes</h3>
     <table>
-        <tr><th>From</th><th>To</th><th>Label</th></tr>
-        {% for from_node, to_node, label in deleted_edges %}
-        <tr class="deleted">
-            <td>{{ from_node }}</td><td>{{ to_node }}</td><td>{{ label }}</td>
+        <tr><th>State</th><th>Old Attributes</th><th>New Attributes</th></tr>
+        {% for name, old_attrs, new_attrs in changed_nodes %}
+        <tr>
+            <td><b>{{ name }}</b></td>
+            <td><pre>{{ old_attrs }}</pre></td>
+            <td><pre>{{ new_attrs }}</pre></td>
         </tr>
         {% endfor %}
     </table>
