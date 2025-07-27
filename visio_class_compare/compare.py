@@ -3,6 +3,7 @@ import os
 from vsdx import VisioFile
 from jinja2 import Environment, FileSystemLoader
 #deee
+#create new output folder to save reports  
 def extract_class_diagram_info(vsdx_path):
     classes = dict()
     edges = set()
