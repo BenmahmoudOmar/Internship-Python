@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Visio Diagram Comparison Report</title>
+    <style>
+        body { font-family: Arial; }
+        h2 { color: #2F4F4F; }
+        table { border-collapse: collapse; width: 80%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; vertical-align: top; }
+        th { background-color: #f2f2f2; }
+        .added { background-color: #d4fcdc; }
+        .deleted { background-color: #fcdcdc; }
+        pre { margin: 0; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h2>Visio Diagram Comparison Report</h2>
+
+    <h3>🟢 Added Nodes</h3>
+    <table>
+        <tr><th>State</th><th>Attributes</th></tr>
+        
+        <tr class="added">
+            <td><b>state 6</b></td>
+            <td><pre>['param1 = 700']</pre></td>
+        </tr>
+        
+    </table>
+
+    <h3>🔴 Deleted Nodes</h3>
+    <table>
+        <tr><th>State</th><th>Attributes</th></tr>
+        
+    </table>
+
+   <h3>🟢 Added Edges</h3>
+<table>
+    <tr><th>From</th><th>To</th></tr>
+    
+    <tr class="added">
+        <td>state 6</td><td>state 4</td>
+    </tr>
+    
+</table>
+
+<h3>🔴 Deleted Edges</h3>
+<table>
+    <tr><th>From</th><th>To</th></tr>
+    
+</table>
+
+    <h3>🟡 Changed Nodes</h3>
+    <table>
+        <tr><th>State</th><th>Old Attributes</th><th>New Attributes</th></tr>
+        
+        <tr>
+            <td><b>off</b></td>
+            <td><pre>[]</pre></td>
+            <td><pre>['param3 = 1000']</pre></td>
+        </tr>
+        
+        <tr>
+            <td><b>state 4</b></td>
+            <td><pre>[]</pre></td>
+            <td><pre>['param1 = 250']</pre></td>
+        </tr>
+        
+        <tr>
+            <td><b>state 3</b></td>
+            <td><pre>[]</pre></td>
+            <td><pre>['param = 100']</pre></td>
+        </tr>
+        
+    </table>
+</body>
+</html>

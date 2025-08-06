@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Python Debugger: Compare",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "visio_class_compare.compare",
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal" ,
+            "args": ["C:/Users/benma/Downloads/diagram_activity.vsdx","C:/Users/benma/Downloads/diagram_activity3.vsdx"]
+        }
+    ]
+}
+

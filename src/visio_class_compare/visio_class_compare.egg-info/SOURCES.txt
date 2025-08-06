@@ -1,5 +1,6 @@
 README.md
 pyproject.toml
+tests/test_compare.py
 visio_class_compare/visio_class_compare.egg-info/PKG-INFO
 visio_class_compare/visio_class_compare.egg-info/SOURCES.txt
 visio_class_compare/visio_class_compare.egg-info/dependency_links.txt
